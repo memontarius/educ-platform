@@ -32,5 +32,15 @@ services:
         ports:
             - 5451:5432
         container_name: ${CONTAINER_PREFIX}_db
+    test_db:
+        image: postgres:latest
+        restart: always
+        environment:
+          POSTGRES_DB: '${DB_DATABASE}'
+          POSTGRES_USER: '${DB_USERNAME}'
+          POSTGRES_PASSWORD: '${DB_PASSWORD}'
+        ports:
+          - 5452:5432
+        container_name: ${CONTAINER_PREFIX}_test_db
 volumes:
     pgdata:

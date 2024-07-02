@@ -4,14 +4,18 @@ ifneq ("$(wildcard $(ENV_PATH))","")
 	 include $(ENV_PATH)
 endif
 
+DOCKER_FILE_PREFIX=
+ifeq ($(APP_ENV),local)
+	DOCKER_FILE_PREFIX=-dev
+endif
 
-DOCKER_FILE=docker-compose.yml
+DOCKER_FILE=docker-compose$(DOCKER_FILE_PREFIX).yml
 cnn=$(CONTAINER_PREFIX)_app # Container name
 sn=app #Service name
 c=DatabaseSeeder # Class name
 
 
-#------ Setup
+# Setup  _____________
 prepare-env:
 	cp -n .env.example .env || true
 	make key
@@ -28,35 +32,38 @@ install:
 	npm run build
 
 
-#------ Docker
+# Other _____________
+config-clr:
+	docker exec $(cnn) php artisan cache:clear
+
+
+# Docker _____________
 up:
-	docker compose up -d
+	docker compose --file $(DOCKER_FILE) up -d
 
 dw:
-	docker compose down
+	docker compose --file $(DOCKER_FILE) down
 
 
-#------ DB
+# DB _____________
 mig:
-	php artisan migrate
+	docker exec $(cnn) php artisan migrate
 
 migr:
-	php artisan migrate:rollback
+	docker exec $(cnn) php artisan migrate:rollback
 
 seed:
-	php artisan db:seed --class=$(c)
+	docker exec $(cnn) php artisan db:seed --class=$(c)
 
 migrf:
-	php artisan migrate:refresh
+	docker exec $(cnn) php artisan migrate:refresh
 
-c-mig:
-	docker exec $(cnn) make mig
 
-c-migr:
-	docker exec $(cnn) make migr
+# Testing _____________
+test:
+	make config-clr
+	docker exec $(cnn) php artisan test
 
-c-seed:
-	docker exec $(cnn) make seed c=$(c)
-
-c-migrf:
-	docker exec $(cnn) make migrf
+testc:
+	make config-clr
+	docker exec $(cnn) php artisan test --filter $(c)
