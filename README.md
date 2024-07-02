@@ -20,9 +20,8 @@
 
 3. Настроить параметры в .env для доступа к базе и отправки почты (если требуется)
     ```dotenv
-    DB_PASSWORD=your_password
     DB_USERNAME=your_user
-    DB_PASSWORD=your_pass
+    DB_PASSWORD=your_password
     ```
 
 4. Настройка прав доступа
