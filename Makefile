@@ -18,7 +18,7 @@ c=DatabaseSeeder # Class name
 # Setup  _____________
 prepare-env:
 	cp -n .env.example .env || true
-	make key
+	php artisan key:generate
 
 setup:
 	sudo chown -R $(USER):www-data storage
