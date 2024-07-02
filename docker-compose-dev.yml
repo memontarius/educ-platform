@@ -15,8 +15,6 @@ services:
         build:
             context: .
             dockerfile: _docker/app/Dockerfile
-            args:
-              - XDEBUG_INSTALL=true
         volumes:
             - ./:/var/www/
             - ./_docker/app/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini

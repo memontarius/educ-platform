@@ -15,12 +15,6 @@ RUN apt-get update && apt-get install -y \
       apt-get clean && \
       rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-
-ARG XDEBUG_INSTALL=false
-RUN if [ "$XDEBUG_INSTALL" = true ]; then \
-        pecl install xdebug && docker-php-ext-enable xdebug; \
-    fi
-
 # Configure non-root user.
 ARG PUID=1000
 ARG PGID=1000
