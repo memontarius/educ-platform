@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y \
       libpng-dev \
       libzip-dev \
       zip unzip \
-      supervisor \
       git && \
       docker-php-ext-install pdo_pgsql && \
       docker-php-ext-install bcmath && \
@@ -15,6 +14,12 @@ RUN apt-get update && apt-get install -y \
       docker-php-ext-install zip && \
       apt-get clean && \
       rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+
+ARG XDEBUG_INSTALL=false
+RUN if [ "$XDEBUG_INSTALL" = true ]; then \
+        pecl install xdebug && docker-php-ext-enable xdebug; \
+    fi
 
 # Configure non-root user.
 ARG PUID=1000

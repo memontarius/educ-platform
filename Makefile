@@ -32,7 +32,7 @@ install:
 	npm run build
 
 
-# Other _____________
+# Helpers _____________
 config-clr:
 	docker exec $(cnn) php artisan cache:clear
 
@@ -43,6 +43,15 @@ up:
 
 dw:
 	docker compose --file $(DOCKER_FILE) down
+
+in:
+	docker exec -it $(cnn) bash
+
+b:
+	docker-compose --file $(DOCKER_FILE) build
+
+bs:
+	docker-compose --file $(DOCKER_FILE) build $(sn)
 
 
 # DB _____________
