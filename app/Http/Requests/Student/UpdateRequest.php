@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Student;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -24,7 +23,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => 'string',
-            'email' => ['email', Rule::unique('students', 'email')->ignore($this->email, 'email')],
+            'email' => 'email|unique:students,email,' . $this->route('student'),
             'group_id' => 'integer|numeric|exists:groups,id'
         ];
     }

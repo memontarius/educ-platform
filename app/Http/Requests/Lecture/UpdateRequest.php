@@ -23,9 +23,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'topic' => [
-                Rule::unique('lectures', 'topic')->ignore($this->topic, 'topic')
-            ],
+            'topic' => 'unique:lectures,topic,' . $this->lecture->id,
             'description' => 'string'
         ];
     }

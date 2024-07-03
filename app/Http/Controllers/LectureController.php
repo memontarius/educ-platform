@@ -14,7 +14,7 @@ class LectureController extends Controller
 {
     public function index(): JsonResponse
     {
-        $groups = Lecture::all();
+        $groups = Lecture::orderBy('id')->get();
         $response = $this->responseBuilder
             ->success()
             ->payload($groups->pluck('topic'))

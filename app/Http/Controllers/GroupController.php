@@ -16,7 +16,7 @@ class GroupController extends Controller
 {
     public function index(): JsonResponse
     {
-        $groups = Group::all();
+        $groups = Group::orderBy('id')->get();
         $response = $this->responseBuilder
             ->success()
             ->payload(IndexResource::collection($groups))

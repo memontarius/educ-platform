@@ -23,10 +23,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => [
-                'required',
-                Rule::unique('groups', 'name')->ignore($this->id)
-            ]
+            'name' => 'required|unique:groups,name,' . $this->group->id
         ];
     }
 }

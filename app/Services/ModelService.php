@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Common\ResponseBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ModelService
 {
@@ -46,6 +47,25 @@ class ModelService
             $responseBuilder->success();
         } catch (\LogicException $e) {
             $responseBuilder->failed()->errors(['errors' => $e->getMessage()]);
+        }
+
+        return $responseBuilder->get();
+    }
+
+    public function updateModelWithTransaction(string $modelClass, int $id, ResponseBuilder &$responseBuilder, array $data): array
+    {
+        try {
+            DB::beginTransaction();
+
+            /** @var Model $model */
+            $model = $modelClass::lockForUpdate()->find($id);
+            $this->updateModel($model, $responseBuilder, $data);
+
+            DB::commit();
+        }
+        catch (\Exception $exception) {
+            DB::rollBack();
+            $responseBuilder->failed()->errorAsString($exception->getMessage());
         }
 
         return $responseBuilder->get();

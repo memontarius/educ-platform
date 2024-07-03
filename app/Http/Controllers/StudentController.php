@@ -16,8 +16,8 @@ class StudentController extends Controller
     public function index(Request $request): JsonResponse
     {
         $students = ($request->input('mode') === 'detail')
-            ? DetailedResource::collection(Student::with('group')->get())
-            : Student::all()->pluck('name');
+            ? DetailedResource::collection(Student::with('group')->orderBy('id')->get())
+            : Student::orderBy('id')->get()->pluck('name');
 
         $response = $this->responseBuilder->success()->payload($students)->get();
 
@@ -41,9 +41,10 @@ class StudentController extends Controller
         return response()->json($response);
     }
 
-    public function update(Student $student, UpdateRequest $request, ModelService $modelService): JsonResponse
+    public function update(int $student, UpdateRequest $request, ModelService $modelService): JsonResponse
     {
-        $response = $modelService->updateModel($student,$this->responseBuilder, $request->validated());
+        $response = $modelService->updateModelWithTransaction(Student::class, $student,
+            $this->responseBuilder, $request->validated());
         return response()->json($response);
     }
 
